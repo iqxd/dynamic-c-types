@@ -1,4 +1,5 @@
-#include "micc.h"
+#pragma once
+#include "config.h"
 
 typedef struct _type type_t;
 
@@ -19,7 +20,7 @@ typedef struct {
 } var_t;
 
 struct _type {
-    type_id id;
+    type_id tp;
     void (*print_func)(var_t*);
 };
 
@@ -49,3 +50,5 @@ typedef struct {
     size_t capacity;
     var_t *lref;
 } list_t;
+
+void print_var(var_t *);
