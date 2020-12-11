@@ -2,4 +2,6 @@
 #include "var.h"
 #include "num.h"
 
-void print(var_t var);
+#define print(x) _Generic((x), \
+    num_t: print_num \
+    )(x)
