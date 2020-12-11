@@ -1,7 +1,7 @@
 #pragma once
 #include "var.h"
 
-type_t IntType,FloatType;
+type_t IntType, FloatType;
 
 #define _to_int_t(x) ((num_t){&IntType, .ival = (int_t)(x)})
 #define _to_double(x) ((num_t){&FloatType, .fval = (double)(x)})

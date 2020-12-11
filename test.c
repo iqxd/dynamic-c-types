@@ -2,6 +2,8 @@
 int main()
 {
     printf("hello micclib!\n");
+
+    puts("\n*** num_t test ***");
     num_t n1 = new_num(11);
     num_t n2 = new_num(3.14159);
     num_t n3 = new_num(-202);
@@ -14,4 +16,10 @@ int main()
     print(n4);
     print(new_num(i1));
     print(new_num(i2));
+
+    puts("\n*** str_t test ***");
+    str_t s1 = new_str("abcdedf");
+    char c1[] = "listen to me, it's very important";
+    print(s1);
+    print(new_str(c1));
 }
