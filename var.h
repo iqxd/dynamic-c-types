@@ -7,7 +7,6 @@ typedef enum
 {
     NONE,
     INT,
-    UINT,
     FLOAT,
     STR,
     SSTR,
@@ -28,7 +27,6 @@ typedef struct {
     type_t *type;
     union {
         int_t ival;
-        uint_t uval;
         double fval;
     };
 } num_t;
