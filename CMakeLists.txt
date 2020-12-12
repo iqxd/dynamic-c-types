@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.18.5)
+if(Win32)
+    cmake_minimum_required(VERSION 3.18.5)
+else()
+    cmake_minimum_required(VERSION 3.10.0)
+endif()
 set(CMAKE_C_STANDARD 11) 
 project(micclib VERSION 0.0.1 LANGUAGES C)
 
