@@ -8,7 +8,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-typedef int64_t int_t;
+typedef long long int_t;
 
 #define INT_T_MIN  (-9223372036854775807i64 - 1)
 #define INT_T_MAX  9223372036854775807i64
