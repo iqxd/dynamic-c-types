@@ -46,7 +46,7 @@ typedef struct {
     type_t *type;
     size_t len;
     size_t capacity;
-    var_t *lref;
+    var_t *lref[];
 } list_t;
 
 void print_var(var_t *);

@@ -22,4 +22,13 @@ int main()
     char c1[] = "listen to me, it's very important";
     print(s1);
     print(new_str(c1));
+    
+    puts("\n*** list_t test ***");
+    num_t* np1 = malloc(sizeof(num_t));
+    *np1 = new_num(201);
+    num_t* np2 = malloc(sizeof(num_t));
+    *np2 = new_num(100.1);
+    
+    list_t* l1 = new_list((var_t * []) {(var_t*)np1,(var_t*)np2}, 2);
+    print(l1);
 }

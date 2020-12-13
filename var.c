@@ -11,4 +11,7 @@ void print_var(var_t* var_p)
         printf("%s\n", ((str_t*)(var_p))->sval);
     else if (tp == STR)
         printf("%s\n", ((str_t*)(var_p))->sref);
+    else if(tp==LIST) {
+        printf("[]");
+    }
 }
