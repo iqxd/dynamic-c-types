@@ -11,6 +11,6 @@
     )(x)
 
 #define delete(x) _Generic((x), \
-    str_t: delete_str, \ 
+    str_t: delete_str, \
     list_t*: delete_list \
 )(x)
