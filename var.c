@@ -12,6 +12,10 @@ void print_var(var_t* var_p)
     else if (tp == STR)
         printf("%s\n", ((str_t*)(var_p))->sref);
     else if(tp==LIST) {
-        printf("[]");
+        list_t* lp = (list_t*)var_p;
+        printf("[\n");
+        for (size_t i = 0; i < lp->len;i++)
+            print_var(lp->lref[i]);
+        printf("]\n");
     }
 }

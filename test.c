@@ -28,7 +28,9 @@ int main()
     *np1 = new_num(201);
     num_t* np2 = malloc(sizeof(num_t));
     *np2 = new_num(100.1);
+    str_t* sp1 = malloc(sizeof(str_t));
+    *sp1 = new_str("hello world");
     
-    list_t* l1 = new_list((var_t * []) {(var_t*)np1,(var_t*)np2}, 2);
+    list_t* l1 = new_list((var_t * []) {(var_t*)np1,(var_t*)np2,(var_t*)sp1}, 3);
     print(l1);
 }

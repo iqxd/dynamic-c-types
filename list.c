@@ -8,14 +8,11 @@ list_t* new_list(var_t* vp[], size_t len)
     lp->type = &ListType;
     lp->len = len;
     lp->capacity = 10 + len * ListSizeIncrFactor;
-    memmove(lp->lref, vp, len);
+    memmove(lp->lref, vp, sizeof(var_t*)*len);
     return lp;
 }
 
 void print_list(list_t* lp)
 {
-    var_t* vp = lp->lref;
-    for (size_t i=0;i<lp->len;i++){
-        vp->type->print_func(vp);
-    }
+    lp->type->print_func((var_t *)lp);
 }
