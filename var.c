@@ -19,3 +19,22 @@ void print_var(var_t* var_p)
         printf("]\n");
     }
 }
+
+void delete_var(var_t* var_p)
+{
+    type_id tp = var_p->type->tp;
+    if (tp==STR){
+        free(((str_t*)var_p)->sref);
+    }
+    else if(tp==LIST) {
+        list_t* lp = (list_t*)var_p;
+        for (size_t i = 0 ; i <lp->len; i++){
+            var_t* vp = lp->lref[i];
+            if (vp->type->delete_func) 
+                vp->type->delete_func(vp);
+            else
+                free(vp);
+        }
+        free(lp);
+    }     
+}

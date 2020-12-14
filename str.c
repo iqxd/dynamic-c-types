@@ -1,6 +1,6 @@
 #include "str.h"
 
-type_t StrType = { .tp = STR, .print_func = print_var};
+type_t StrType = { .tp = STR, .print_func = print_var,.delete_func=delete_var};
 type_t SStrType = {.tp = SSTR, .print_func = print_var};
 
 str_t new_str(char* cp)
@@ -14,6 +14,11 @@ str_t new_str(char* cp)
     else {
         return (str_t) { &StrType, .len = len, .sref = strdup(cp) };
     }
+}
+
+void delte_str(str_t s)
+{
+    s.type->delete_func((var_t*)&s);
 }
 
 void print_str(str_t s)

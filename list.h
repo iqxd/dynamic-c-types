@@ -7,4 +7,5 @@ type_t ListType;
 
 list_t* new_list(var_t*[],size_t);
 
+void delete_list(list_t*);
 void print_list(list_t*);

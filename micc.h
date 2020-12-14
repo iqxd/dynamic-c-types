@@ -9,3 +9,8 @@
     str_t: print_str, \
     list_t*: print_list \
     )(x)
+
+#define delete(x) _Generic((x), \
+    str_t: delete_str, \ 
+    list_t*: delete_list \
+)(x)

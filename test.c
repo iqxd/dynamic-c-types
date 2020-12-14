@@ -41,4 +41,6 @@ int main()
     
     print(l1);
     print(l2);
+
+    delete(l2);
 }
