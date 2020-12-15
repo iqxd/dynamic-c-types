@@ -9,7 +9,9 @@ list_t* new_list(var_t* vp[], size_t len)
     lp->type = &ListType;
     lp->len = len;
     lp->capacity = capacity;
-    memcpy(lp->lref, vp, sizeof(var_t*)*len);
+    for (size_t i =0 ; i<lp->len; i++) {
+        lp->lref[i] = vp[i]->type->clone_func(vp[i]);
+    }
     return lp;
 }
 

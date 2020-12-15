@@ -24,23 +24,18 @@ int main()
     print(new_str(c1));
     
     puts("\n*** list_t test ***");
-    num_t* np1 = malloc(sizeof(num_t));
-    *np1 = new_num(201);
-    num_t* np2 = malloc(sizeof(num_t));
-    *np2 = new_num(100.1);
-    str_t* sp1 = malloc(sizeof(str_t));
-    *sp1 = new_str("hello world");
+    num_t nn1 = new_num(201);
+    num_t nn2 = new_num(100.1);
+    str_t ss1 = new_str("hello world");
+    str_t ss2 = new_str("everyone should work hard for our future"); 
+    num_t nn3 = new_num(99999999);
     
-    str_t* sp2 = malloc(sizeof(str_t));
-    *sp2 = new_str("everyone should work hard for our future");
-    num_t* np3 = malloc(sizeof(num_t));
-    *np3 = new_num(99999999);
-    
-    list_t* l1 = new_list((var_t * []) {(var_t*)np1,(var_t*)np2,(var_t*)sp1}, 3);
-    list_t* l2 = new_list((var_t * []) {(var_t*)sp2,(var_t*)l1,(var_t*)np3}, 3);
+    list_t* l1 = new_list((var_t * []) {(var_t*)&nn1,(var_t*)&nn2,(var_t*)&ss1}, 3);
+    list_t* l2 = new_list((var_t * []) {(var_t*)&ss2,(var_t*)l1,(var_t*)&nn3}, 3);
     
     print(l1);
     print(l2);
-
+    
+    delete(l1);
     delete(l2);
 }

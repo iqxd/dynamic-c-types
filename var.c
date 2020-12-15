@@ -43,7 +43,12 @@ var_t* clone_var(var_t* var_p)
         list_t* lp = (list_t*)var_p;
         size_t len = sizeof(list_t) + sizeof(var_t*) * (lp->capacity);
         list_t* lp_dup = malloc(len);
-        memcpy(lp_dup, lp, len);
+        *lp_dup = *lp;
+        for (size_t i = 0; i < lp->len; i++) {
+            var_t* vp = lp->lref[i];
+            if (vp->type->clone_func) 
+                lp_dup->lref[i] = vp->type->clone_func(vp);
+        }
         return (var_t*)lp_dup;
     }
 }
