@@ -24,4 +24,6 @@ type_t IntType, FloatType;
     long double : _to_double(x) \
 )
 
-void print_num(num_t n);
+var_t* clone_num(num_t);
+void print_num(num_t);
+

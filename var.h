@@ -21,6 +21,7 @@ typedef struct {
 struct _type {
     type_id tp;
     void (*print_func)(var_t*);
+    var_t* (*clone_func)(var_t*);
     void (*delete_func)(var_t*);
 };
 
@@ -51,4 +52,5 @@ typedef struct {
 } list_t;
 
 void print_var(var_t *);
+var_t* clone_var(var_t*);
 void delete_var(var_t*);
