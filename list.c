@@ -4,10 +4,11 @@ type_t ListType = { .tp = LIST, .print_func = print_var , .delete_func = delete_
 
 list_t* new_list(var_t* vp[], size_t len)
 {
-    list_t* lp = malloc(sizeof(list_t)+sizeof(var_t*)*len);
+    size_t capacity =  10 + len * ListSizeIncrFactor;
+    list_t* lp = malloc(sizeof(list_t)+sizeof(var_t*)*capacity);
     lp->type = &ListType;
     lp->len = len;
-    lp->capacity = 10 + len * ListSizeIncrFactor;
+    lp->capacity = capacity;
     memmove(lp->lref, vp, sizeof(var_t*)*len);
     return lp;
 }
