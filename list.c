@@ -9,7 +9,7 @@ list_t* new_list(var_t* vp[], size_t len)
     lp->type = &ListType;
     lp->len = len;
     lp->capacity = capacity;
-    memmove(lp->lref, vp, sizeof(var_t*)*len);
+    memcpy(lp->lref, vp, sizeof(var_t*)*len);
     return lp;
 }
 
