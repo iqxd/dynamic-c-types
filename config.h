@@ -6,7 +6,9 @@
 #include <string.h>
 #include <assert.h>
 
-#define _CRT_SECURE_NO_WARNINGS
+#ifdef _MSC_VER
+    #define _CRT_SECURE_NO_WARNINGS
+#endif
 
 typedef long long int_t;
 
