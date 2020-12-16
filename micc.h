@@ -14,3 +14,9 @@
     str_t: delete_str, \
     list_t*: delete_list \
 )(x)
+
+#define clone(x) _Generic((x), \
+    num_t: clone_num, \
+    str_t: clone_str, \
+    list_t*: clone_list \
+)(x)
