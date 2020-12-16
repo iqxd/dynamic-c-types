@@ -6,9 +6,10 @@ type_t SStrType = {.tp = SSTR, .print_func = print_var , .clone_func = clone_var
 str_t new_str(char* cp)
 {
     size_t len = strlen(cp);
-    if (len < 16) {
+    if (len <= SHORT_STR_LEN_MAX) {
         str_t s = { &SStrType };
         strcpy(s.sval, cp);
+        s.sval[SHORT_STR_ALLOC_BYTES - 1] = (char)len;
         return s;
     }
     else {

@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
     type_t *type;
     union {
-        char sval[16];
+        char sval[SHORT_STR_ALLOC_BYTES];
         struct {
             size_t len;
             char *sref;
