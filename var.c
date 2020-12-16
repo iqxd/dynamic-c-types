@@ -23,17 +23,17 @@ void print_var(var_t* var_p)
 var_t* clone_var(var_t* var_p)
 {
     type_id tp = var_p->type->tp;
-    if(tp==INT || tp==FLOAT){
+    if (tp == INT || tp == FLOAT) {
         num_t* np_dup = malloc(sizeof(num_t));
         *np_dup = *((num_t*)var_p);
         return (var_t*)np_dup;
     }
-    else if(tp==SSTR){
+    else if (tp == SSTR) {
         str_t* sp_dup = malloc(sizeof(str_t));
         *sp_dup = *((str_t*)var_p);
         return (var_t*)sp_dup;
     }
-    else if(tp==STR){
+    else if (tp == STR) {
         str_t* sp_dup = malloc(sizeof(str_t));
         sp_dup->type = var_p->type;
         sp_dup->sref = strdup(((str_t*)var_p)->sref);
@@ -51,6 +51,8 @@ var_t* clone_var(var_t* var_p)
         }
         return (var_t*)lp_dup;
     }
+    else
+        return (var_t*)NULL;  //return NONE type?
 }
 
 void delete_var(var_t* var_p)
