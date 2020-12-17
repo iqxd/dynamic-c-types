@@ -51,6 +51,22 @@ typedef struct {
     var_t *lref[];
 } list_t;
 
+typedef struct _dictnode dnode_t;
+
+struct _dictnode {
+    char key[DICT_KEY_ALLOC_BYTES];
+    var_t* valp;
+    dnode_t* left;
+    dnode_t* right;
+};
+
+typedef struct {
+    type_t* type;
+    size_t len;
+    dnode_t* root;
+    dnode_t reserved[DICT_RESERVED_NODES];
+} dict_t;
+
 void print_var(var_t *);
 var_t* clone_var(var_t*);
 void delete_var(var_t*);
