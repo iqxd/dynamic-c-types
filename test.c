@@ -33,11 +33,18 @@ int main()
     list_t* l1 = new_list((var_t * []) {(var_t*)&nn1,(var_t*)&nn2,(var_t*)&ss1}, 3);
     list_t* l2 = new_list((var_t * []) {(var_t*)&ss2,(var_t*)l1,(var_t*)&nn3}, 3);
     list_t* l3 = (list_t*)clone(l2);
+    list_t* l4 = new_list(NULL, 0);
+    list_add(l4, (var_t*)&nn1);
+    list_add(l4, (var_t*)l1);
+    list_add(l4, (var_t*)&ss1);
+    
     print(l1);
     print(l2);
     print(l3);
+    print(l4);
     
     delete(l1);
     delete(l2);
     delete(l3);
+    delete(l4);
 }
