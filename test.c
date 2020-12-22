@@ -1,4 +1,5 @@
 #include "micc.h"
+#include "tagptr.h"
 int main()
 {
     printf("hello micclib!\n");
@@ -47,4 +48,17 @@ int main()
     delete(l2);
     delete(l3);
     delete(l4);
+    
+    tagptr_t tg1 = new_int(-3);
+    printf("0x%16.16p\n", (void*)tg1);
+    
+    int iv1 = get_int(tg1);
+    tag_t tt1 = get_tag(tg1);
+    printf("%d %d\n", iv1, tt1);
+    
+    tagptr_t tg2 = new_float(-11.52);
+    void *dv1 = get_ref(tg2);
+    tag_t tt2 = get_tag(tg2);
+    printf("%f %d\n", *((double*)dv1), tt2);
+    free(dv1);
 }

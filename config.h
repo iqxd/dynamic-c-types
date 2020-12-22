@@ -6,6 +6,8 @@
 #include <string.h>
 #include <assert.h>
 
+static_assert(sizeof(size_t)==8,"require 64 bits architecture");
+
 #ifdef _MSC_VER
     #define _CRT_SECURE_NO_WARNINGS
 #endif
