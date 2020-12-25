@@ -59,6 +59,10 @@ int main()
     tagptr_t tg2 = new_float(-11.52);
     void *dv1 = get_ref(tg2);
     tag_t tt2 = get_tag(tg2);
-    printf("%f %d\n", *((double*)dv1), tt2);
+    printf("%f %d\n", get_float(tg2), tt2);
     free(dv1);
+    
+    tagptr_t pf1 = new_float(567.113456789);
+    tag_t ptag1 = get_tag(pf1);
+    printf("%.16f %d\n", get_float(pf1), ptag1);
 }
