@@ -113,3 +113,10 @@ static inline char* get_str(tagptr_t tp)
         return ((tlstr_t*)ref)->val;
 }
 
+typedef struct {
+    void (*print_func)(tagptr_t);
+    tagptr_t (*clone_func)(tagptr_t);
+    void (*delete_func)(tagptr_t);
+} tagfunc_t;
+
+tagfunc_t tagfunc_arr[257];
