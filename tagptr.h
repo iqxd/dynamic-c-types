@@ -36,7 +36,7 @@ static inline void* get_ref(tagptr_t tp)
     return (void*)(tp & REF_BITS_MASK );
 }
 
-static inline tagptr_t new_int(int32_t val)
+static inline tagptr_t set_int(int32_t val)
 {
     return build_tag_ptr(NULL, T_INT) | (uint32_t)val;
 }
@@ -46,7 +46,7 @@ static inline int32_t get_int(tagptr_t tp)
     return (int32_t)(tp & INT_BITS_MASK);
 }
 
-static inline tagptr_t new_float(double val)
+static inline tagptr_t set_float(double val)
 {
     if (val < 0)
     {
@@ -84,7 +84,7 @@ typedef struct {
     size_t alloc;
 } tlist_t;
 
-static inline tagptr_t new_string(const char* val)
+static inline tagptr_t set_str(const char* val)
 {
     size_t len = strlen(val);
     if ( len < 23 ){
@@ -103,7 +103,7 @@ static inline tagptr_t new_string(const char* val)
     } 
 }
 
-static inline char* get_string(tagptr_t tp)
+static inline char* get_str(tagptr_t tp)
 {
     tag_t tag = get_tag(tp);
     void* ref = get_ref(tp);
