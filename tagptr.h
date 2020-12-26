@@ -14,7 +14,7 @@ typedef enum {
     T_TRUE,
     T_FALSE,
     T_NEG_FLOAT,
-    T_STR,
+    T_LSTR,
     T_SSTR,
     T_LIST,
     T_DICT,
@@ -66,5 +66,50 @@ static inline double get_float(tagptr_t tp)
         return *(double*)(&(tagptr_t){ tp & POS_FLOAT_BITS_MASK });
     else if (tag == T_NEG_FLOAT)
         return *(double*)get_ref(tp);
+}
+
+typedef struct {
+    char val[23];
+    char len;
+} tsstr_t;
+
+typedef struct {
+    size_t len;
+    char* val;
+} tlstr_t;
+
+typedef struct {
+    size_t len;
+    tagptr_t* elem;
+    size_t alloc;
+} tlist_t;
+
+static inline tagptr_t new_string(const char* val)
+{
+    size_t len = strlen(val);
+    if ( len < 23 ){
+        tsstr_t* raw = malloc(sizeof(tsstr_t));
+        strcpy(raw->val, val);
+        raw->len = len;
+        return build_tag_ptr(raw, T_SSTR);
+    } 
+    else 
+    {
+        tlstr_t* raw = malloc(sizeof(tlstr_t));
+        raw->len = len;
+        raw->val = malloc((len + 1) * sizeof(char));
+        strcpy(raw->val, val);
+        return build_tag_ptr(raw, T_LSTR);
+    } 
+}
+
+static inline char* get_string(tagptr_t tp)
+{
+    tag_t tag = get_tag(tp);
+    void* ref = get_ref(tp);
+    if (tag == T_SSTR)
+        return ((tsstr_t*)ref)->val;
+    else if (tag == T_LSTR)
+        return ((tlstr_t*)ref)->val;
 }
 

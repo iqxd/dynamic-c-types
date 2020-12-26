@@ -68,4 +68,9 @@ int main()
     
     tagptr_t p3 = new_float(-0.0);
     printf("p3 = %.16f\n", get_float(p3));
+    
+    tagptr_t tstr1 = new_string("12345678");
+    printf("short: %s\n", get_string(tstr1));
+    tagptr_t tstr2 = new_string("I am going to take some good snacks");
+    printf("long: %s\n", get_string(tstr2));
 }
