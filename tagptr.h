@@ -9,10 +9,10 @@ typedef uint64_t tagptr_t;
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef enum {
-    T_NONE=0,
+    T_INT = 0 ,
+    T_NONE,
     T_TRUE,
     T_FALSE,
-    T_INT,
     T_NEG_FLOAT,
     T_STR,
     T_SSTR,
@@ -54,6 +54,8 @@ static inline tagptr_t new_float(double val)
         *pval = val;
         return build_tag_ptr(pval, T_NEG_FLOAT);
     }
+    // most floating numbers used in common case are positive, 
+    // so use tagged value in the pointer to avoid heap allocation.
     return (*(tagptr_t*)&val) | build_tag_ptr(NULL, T_POS_FLOAT);  
 }
 

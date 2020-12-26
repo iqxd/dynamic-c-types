@@ -65,4 +65,7 @@ int main()
     tagptr_t pf1 = new_float(567.113456789);
     tag_t ptag1 = get_tag(pf1);
     printf("%.16f %d\n", get_float(pf1), ptag1);
+    
+    tagptr_t p3 = new_float(-0.0);
+    printf("p3 = %.16f\n", get_float(p3));
 }
