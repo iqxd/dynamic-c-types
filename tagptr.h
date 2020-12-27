@@ -20,6 +20,28 @@ typedef enum {
     T_POS_FLOAT = POS_FLOAT_TAG_LEAST
 } tag_t;
 
+typedef struct {
+    double val;
+    void* unused[2];
+} tnfloat_t;
+
+typedef struct {
+    char val[23];
+    char len;
+} tsstr_t;
+
+typedef struct {
+    size_t len;
+    char* val;
+    void* unused;
+} tlstr_t;
+
+typedef struct {
+    size_t len;
+    tagptr_t* elem;
+    size_t alloc;
+} tlist_t;
+
 static inline tagptr_t build_tag_ptr(void* raw, tag_t tag)
 {
     return (tagptr_t)raw | ((tagptr_t)tag << TAG_SHIFT_BITS);
@@ -49,9 +71,9 @@ static inline tagptr_t set_float(double val)
 {
     if (val < 0)
     {
-        double* pval = (double*)malloc(sizeof(val));
-        *pval = val;
-        return build_tag_ptr(pval, T_NEG_FLOAT);
+        tnfloat_t* raw = malloc(sizeof(tnfloat_t));
+        raw->val = val;
+        return build_tag_ptr(raw, T_NEG_FLOAT);
     }
     // most floating numbers used in common case are positive, 
     // so use tagged value in the pointer to avoid heap allocation.
@@ -76,22 +98,6 @@ static inline double get_neg_float(tagptr_t tp)
 {
     return *(double*)get_ref(tp);
 }
-
-typedef struct {
-    char val[23];
-    char len;
-} tsstr_t;
-
-typedef struct {
-    size_t len;
-    char* val;
-} tlstr_t;
-
-typedef struct {
-    size_t len;
-    tagptr_t* elem;
-    size_t alloc;
-} tlist_t;
 
 static inline tagptr_t set_str(const char* val)
 {
@@ -133,6 +139,7 @@ static inline char* get_long_str(tagptr_t tp)
 }
 
 typedef struct {
+    size_t(*size_func)(tagptr_t);
     void (*print_func)(tagptr_t);
     tagptr_t (*clone_func)(tagptr_t);
     void (*delete_func)(tagptr_t);
@@ -164,4 +171,30 @@ void print_short_str(tagptr_t tp)
 void print_long_str(tagptr_t tp)
 {
     printf("%16.16llx => %s\n",tp, get_long_str(tp));
+}
+
+// size funcs
+size_t size_int(tagptr_t tp)
+{
+    return sizeof(tp);
+}
+
+size_t size_pos_float(tagptr_t tp)
+{
+    return sizeof(tp);
+}
+
+size_t size_neg_float(tagptr_t tp)
+{
+    return sizeof(tp) + sizeof(tnfloat_t);
+}
+
+size_t size_short_str(tagptr_t tp)
+{
+    return sizeof(tp) + sizeof(tsstr_t);
+}
+
+size_t size_long_str(tagptr_t tp)
+{
+    return sizeof(tp) + sizeof(tlstr_t) + ((tlstr_t*)get_ref(tp))->len+1;
 }
