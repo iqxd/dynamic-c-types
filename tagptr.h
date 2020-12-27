@@ -1,24 +1,23 @@
 #include "config.h"
 
 typedef uint64_t tagptr_t;
-#define TAG_ALLOC_BITS 9
-#define TAG_SHIFT_BITS 55
+#define TAG_ALLOC_BITS 6
+#define TAG_SHIFT_BITS (64-TAG_ALLOC_BITS)
 #define POS_FLOAT_SHIFT_BITS 1
+#define POS_FLOAT_TAG_LEAST (1<<(TAG_ALLOC_BITS-1))
 #define INT_BITS_MASK       0x00000000FFFFFFFF
-#define REF_BITS_MASK       0x007FFFFFFFFFFFFF
+#define REF_BITS_MASK       0x0000FFFFFFFFFFFF
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef enum {
     T_INT = 0 ,
     T_NONE,
-    T_TRUE,
-    T_FALSE,
     T_NEG_FLOAT,
     T_LSTR,
     T_SSTR,
     T_LIST,
     T_DICT,
-    T_POS_FLOAT = 256
+    T_POS_FLOAT = POS_FLOAT_TAG_LEAST
 } tag_t;
 
 static inline tagptr_t build_tag_ptr(void* raw, tag_t tag)
@@ -119,4 +118,4 @@ typedef struct {
     void (*delete_func)(tagptr_t);
 } tagfunc_t;
 
-tagfunc_t tagfunc_arr[257];
+tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST+1];
