@@ -67,6 +67,16 @@ static inline double get_float(tagptr_t tp)
         return *(double*)get_ref(tp);
 }
 
+static inline double get_pos_float(tagptr_t tp)
+{
+    return *(double*)(&(tagptr_t){ tp & POS_FLOAT_BITS_MASK });
+}
+
+static inline double get_neg_float(tagptr_t tp)
+{
+    return *(double*)get_ref(tp);
+}
+
 typedef struct {
     char val[23];
     char len;
@@ -112,6 +122,16 @@ static inline char* get_str(tagptr_t tp)
         return ((tlstr_t*)ref)->val;
 }
 
+static inline char* get_short_str(tagptr_t tp)
+{
+    return ((tsstr_t*)get_ref(tp))->val;
+}
+
+static inline char* get_long_str(tagptr_t tp)
+{
+    return ((tlstr_t*)get_ref(tp))->val;
+}
+
 typedef struct {
     void (*print_func)(tagptr_t);
     tagptr_t (*clone_func)(tagptr_t);
@@ -119,3 +139,29 @@ typedef struct {
 } tagfunc_t;
 
 tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST+1];
+
+// print funcs
+void print_int(tagptr_t tp)
+{
+    printf("%16.16llx => %d\n",tp, get_int(tp));
+}
+
+void print_pos_float(tagptr_t tp)
+{
+    printf("%16.16llx => %lf\n",tp, get_pos_float(tp));
+}
+
+void print_neg_float(tagptr_t tp)
+{
+    printf("%16.16llx => %lf\n",tp, get_neg_float(tp));
+}
+
+void print_short_str(tagptr_t tp)
+{
+    printf("%16.16llx => %s\n",tp, get_short_str(tp));
+}
+
+void print_long_str(tagptr_t tp)
+{
+    printf("%16.16llx => %s\n",tp, get_long_str(tp));
+}
