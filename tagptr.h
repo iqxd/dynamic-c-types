@@ -20,6 +20,7 @@ typedef enum {
     T_POS_FLOAT = POS_FLOAT_TAG_LEAST
 } tag_t;
 
+#pragma pack(8)
 typedef struct {
     double val;
     void* unused[2];
@@ -41,6 +42,12 @@ typedef struct {
     tagptr_t* elem;
     size_t alloc;
 } tlist_t;
+#pragma pack()
+
+static_assert(sizeof(tnfloat_t) == 24, "");
+static_assert(sizeof(tsstr_t) == 24, "");
+static_assert(sizeof(tlstr_t) == 24, "");
+static_assert(sizeof(tlist_t) == 24, "");
 
 static inline tagptr_t build_tag_ptr(void* raw, tag_t tag)
 {
