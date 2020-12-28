@@ -80,6 +80,22 @@ static inline void* get_ref(tagptr_t tp)
     return (void*)(tp & REF_BITS_MASK );
 }
 
+static inline void* _new_heap_obj()
+{
+    return malloc(HEAP_OBJECT_BYTES);
+}
+
+static inline void* _clone_heap_obj(tagptr_t tp)
+{
+    return memcpy(_new_heap_obj(), get_ref(tp), HEAP_OBJECT_BYTES);
+}
+
+static inline void _delete_heap_obj(tagptr_t* tp_ref)
+{
+    free(get_ref(*tp_ref));
+    *tp_ref = NULL;
+}
+
 static inline tagptr_t set_int(int32_t val)
 {
     return build_tag_ptr(NULL, T_INT) | (uint32_t)val;
@@ -186,3 +202,17 @@ size_t size_pos_float(tagptr_t);
 size_t size_neg_float(tagptr_t);
 size_t size_short_str(tagptr_t);
 size_t size_long_str(tagptr_t);
+
+// clone funcs
+tagptr_t clone_int(tagptr_t);
+tagptr_t clone_pos_float(tagptr_t);
+tagptr_t clone_neg_float(tagptr_t);
+tagptr_t clone_short_str(tagptr_t);
+tagptr_t clone_long_str(tagptr_t);
+
+// delete funcs
+void delete_int(tagptr_t*);
+void delete_pos_float(tagptr_t*);
+void delete_neg_float(tagptr_t*);
+void delete_short_str(tagptr_t*);
+void delete_long_str(tagptr_t*);

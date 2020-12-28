@@ -52,6 +52,72 @@ size_t size_long_str(tagptr_t tp)
     return sizeof(tp) + sizeof(tlstr_t) + ((tlstr_t*)get_ref(tp))->len+1;
 }
 
+// clone funcs
+tagptr_t clone_int(tagptr_t tp)
+{
+    return tp;
+}
+
+tagptr_t clone_pos_float(tagptr_t tp)
+{
+    return tp;
+}
+
+tagptr_t clone_neg_float(tagptr_t tp)
+{
+    return build_tag_ptr(_clone_heap_obj(tp), T_NEG_FLOAT);
+}
+
+tagptr_t clone_short_str(tagptr_t tp)
+{
+    return build_tag_ptr(_clone_heap_obj(tp), T_SSTR);
+}
+
+tagptr_t clone_long_str(tagptr_t tp)
+{
+    tlstr_t* lstr = (tlist_t*)_clone_heap_obj(tp);
+    *(lstr->refcnt)++;
+}
+
+// delete funcs
+void delete_int(tagptr_t* tp)
+{
+    *tp = NULL;
+}
+
+void delete_pos_float(tagptr_t* tp)
+{
+    *tp = NULL;
+}
+
+void delete_neg_float(tagptr_t* tp)
+{
+    _delete_heap_obj(tp);
+}
+
+void delete_short_str(tagptr_t* tp)
+{
+    _delete_heap_obj(tp);
+}
+
+void delete_long_str(tagptr_t* tp)
+{
+    tlstr_t* lstr = (tlstr_t*)get_ref(*tp);
+    size_t n = *(lstr->refcnt);
+    if (--n == 0)
+    {
+        free(lstr->val);
+        free(lstr->refcnt);
+    }
+    else
+    {
+        *(lstr->refcnt) = n;
+    }
+    free(lstr);
+    *tp = NULL;
+}
+
+
 // tagfunc_t tagfunc_arr[] = {
 //     [T_INT] = {},
 //     [T_POS_FLOAT] = {},
