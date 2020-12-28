@@ -6,20 +6,13 @@
 #include <string.h>
 #include <assert.h>
 
-static_assert(sizeof(size_t)==8,"require 64 bits architecture");
-
 #ifdef _MSC_VER
     #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-typedef long long int_t;
+#define HEAP_OBJECT_BYTES 24
 
-#define INT_T_MIN  (-9223372036854775807i64 - 1)
-#define INT_T_MAX  9223372036854775807i64
-
-
-#define SHORT_STR_ALLOC_BYTES 24
-#define SHORT_STR_LEN_MAX (SHORT_STR_ALLOC_BYTES-2)
+#define SHORT_STR_ALLOC_BYTES 23
 
 #define LIST_RESERVED_ELEMS 10
 #define LIST_INCR_FACTOR 1.8

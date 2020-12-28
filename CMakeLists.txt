@@ -10,5 +10,5 @@ endif()
 project(micclib VERSION 0.0.1 LANGUAGES C)
 set(CMAKE_C_STANDARD 11) 
 
-add_executable(test config.h micc.h micc.c num.h num.c str.h str.c list.h list.c var.h var.c tagptr.h tagptr.c test.c)
+add_executable(test config.h tagptr.h tagptr.c test.c)
 

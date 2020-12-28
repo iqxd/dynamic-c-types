@@ -4,7 +4,7 @@ int main()
     printf("hello micclib!\n");
 
     tagptr_t tg1 = set_int(-3);
-    printf("%16.16p\n", (void*)tg1);
+    printf("%16.16llX\n", tg1);
     
     int iv1 = get_int(tg1);
     tag_t tt1 = get_tag(tg1);

@@ -1,3 +1,4 @@
+#pragma once
 #include "config.h"
 
 typedef uint64_t tagptr_t;
@@ -20,14 +21,13 @@ typedef enum {
     T_POS_FLOAT = POS_FLOAT_TAG_LEAST
 } tag_t;
 
-#pragma pack(8)
 typedef struct {
     double val;
     void* unused[2];
 } tnfloat_t;
 
 typedef struct {
-    char val[23];
+    char val[SHORT_STR_ALLOC_BYTES];
     char len;
 } tsstr_t;
 
@@ -42,12 +42,12 @@ typedef struct {
     tagptr_t* elem;
     size_t alloc;
 } tlist_t;
-#pragma pack()
 
-static_assert(sizeof(tnfloat_t) == 24, "");
-static_assert(sizeof(tsstr_t) == 24, "");
-static_assert(sizeof(tlstr_t) == 24, "");
-static_assert(sizeof(tlist_t) == 24, "");
+
+static_assert(sizeof(tnfloat_t) <= HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(tsstr_t) <= HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(tlstr_t) <= HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(tlist_t) <= HEAP_OBJECT_BYTES, "");
 
 static inline tagptr_t build_tag_ptr(void* raw, tag_t tag)
 {
@@ -109,7 +109,7 @@ static inline double get_neg_float(tagptr_t tp)
 static inline tagptr_t set_str(const char* val)
 {
     size_t len = strlen(val);
-    if ( len < 23 ){
+    if ( len < SHORT_STR_ALLOC_BYTES ){
         tsstr_t* raw = malloc(sizeof(tsstr_t));
         strcpy(raw->val, val);
         raw->len = len;

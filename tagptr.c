@@ -52,11 +52,11 @@ size_t size_long_str(tagptr_t tp)
     return sizeof(tp) + sizeof(tlstr_t) + ((tlstr_t*)get_ref(tp))->len+1;
 }
 
-tagfunc_t tagfunc_arr[] = {
-    [T_INT] = {},
-    [T_POS_FLOAT] = {},
-    [T_NEG_FLOAT] = {},
-    [T_SSTR] = {},
-    [T_LSTR] = {}
-};
+// tagfunc_t tagfunc_arr[] = {
+//     [T_INT] = {},
+//     [T_POS_FLOAT] = {},
+//     [T_NEG_FLOAT] = {},
+//     [T_SSTR] = {},
+//     [T_LSTR] = {}
+// };
 
