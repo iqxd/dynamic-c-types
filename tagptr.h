@@ -18,6 +18,7 @@
 #define DICT_RESERVED_NODES 16
 
 typedef uint64_t tagptr_t;
+#define TAG_NULL ((tagptr_t)0)
 #define TAG_ALLOC_BITS 6
 #define TAG_SHIFT_BITS (64-TAG_ALLOC_BITS)
 #define POS_FLOAT_SHIFT_BITS 1
@@ -93,7 +94,7 @@ static inline void* _clone_heap_obj(tagptr_t tp)
 static inline void _delete_heap_obj(tagptr_t* tp_ref)
 {
     free(get_ref(*tp_ref));
-    *tp_ref = NULL;
+    *tp_ref = TAG_NULL;
 }
 
 static inline tagptr_t set_int(int32_t val)

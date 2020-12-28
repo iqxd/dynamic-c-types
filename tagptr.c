@@ -75,19 +75,20 @@ tagptr_t clone_short_str(tagptr_t tp)
 
 tagptr_t clone_long_str(tagptr_t tp)
 {
-    tlstr_t* lstr = (tlist_t*)_clone_heap_obj(tp);
+    tlstr_t* lstr = (tlstr_t*)_clone_heap_obj(tp);
     *(lstr->refcnt)++;
+    return build_tag_ptr(lstr, T_LSTR);
 }
 
 // delete funcs
 void delete_int(tagptr_t* tp)
 {
-    *tp = NULL;
+    *tp = TAG_NULL;
 }
 
 void delete_pos_float(tagptr_t* tp)
 {
-    *tp = NULL;
+    *tp = TAG_NULL;
 }
 
 void delete_neg_float(tagptr_t* tp)
@@ -114,12 +115,12 @@ void delete_long_str(tagptr_t* tp)
         *(lstr->refcnt) = n;
     }
     free(lstr);
-    *tp = NULL;
+    *tp = TAG_NULL;
 }
 
 
 // tagfunc_t tagfunc_arr[] = {
-//     [T_INT] = {},
+//     [T_INT] = {.print_func = },
 //     [T_POS_FLOAT] = {},
 //     [T_NEG_FLOAT] = {},
 //     [T_SSTR] = {},
