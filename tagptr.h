@@ -50,7 +50,7 @@ typedef struct {
 typedef struct {
     size_t len;
     char* val;
-    void* unused;
+    size_t* refcnt;
 } tlstr_t;
 
 typedef struct {
@@ -125,7 +125,8 @@ static inline double get_neg_float(tagptr_t tp)
 static inline tagptr_t set_str(const char* val)
 {
     size_t len = strlen(val);
-    if ( len < SHORT_STR_ALLOC_BYTES ){
+    if ( len < SHORT_STR_ALLOC_BYTES )
+    {
         tsstr_t* raw = malloc(sizeof(tsstr_t));
         strcpy(raw->val, val);
         raw->len = len;
@@ -137,6 +138,8 @@ static inline tagptr_t set_str(const char* val)
         raw->len = len;
         raw->val = malloc((len + 1) * sizeof(char));
         strcpy(raw->val, val);
+        raw->refcnt = malloc(sizeof(size_t));
+        *(raw->refcnt) = 1;
         return build_tag_ptr(raw, T_LSTR);
     } 
 }
