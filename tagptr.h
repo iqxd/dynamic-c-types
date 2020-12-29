@@ -18,7 +18,7 @@ typedef uint64_t var_t;
 
 typedef enum {
     T_INT = 0,
-    T_NONE,
+    T_NULL,
     T_NFLOAT,
     T_LSTR,
     T_SSTR,
@@ -27,7 +27,7 @@ typedef enum {
     T_PFLOAT = POS_FLOAT_TAG_LEAST
 } type_t;
 
-#define TAG_NULL (((var_t)T_NONE) << TAG_SHIFT_BITS)
+#define VAR_NULL (((var_t)T_NULL) << TAG_SHIFT_BITS)
 
 typedef struct {
     double val;
@@ -56,12 +56,12 @@ static_assert(sizeof(sstr_t) <= HEAP_OBJECT_BYTES, "");
 static_assert(sizeof(lstr_t) <= HEAP_OBJECT_BYTES, "");
 static_assert(sizeof(list_t) <= HEAP_OBJECT_BYTES, "");
 
-static inline var_t build_tag_ptr(void* raw, type_t tag)
+static inline var_t build_var(void* raw, type_t tp)
 {
-    return (var_t)raw | ((var_t)tag << TAG_SHIFT_BITS);
+    return (var_t)raw | ((var_t)tp << TAG_SHIFT_BITS);
 }
 
-static inline type_t get_tag(var_t v)
+static inline type_t get_type(var_t v)
 {
     return (v >> POS_FLOAT_ALLOC_BITS) ? POS_FLOAT_TAG_LEAST : (v >> TAG_SHIFT_BITS);
 }
@@ -84,12 +84,12 @@ static inline void* _clone_heap_obj(var_t v)
 static inline void _delete_heap_obj(var_t* v_ref)
 {
     free(get_ref(*v_ref));
-    *v_ref = TAG_NULL;
+    *v_ref = VAR_NULL;
 }
 
 static inline var_t set_int(int32_t val)
 {
-    return build_tag_ptr(NULL, T_INT) | (uint32_t)val;
+    return build_var(NULL, T_INT) | (uint32_t)val;
 }
 
 static inline int32_t get_int(var_t v)
@@ -103,11 +103,11 @@ static inline var_t set_float(double val)
     {
         nfloat_t* raw = malloc(sizeof(nfloat_t));
         raw->val = val;
-        return build_tag_ptr(raw, T_NFLOAT);
+        return build_var(raw, T_NFLOAT);
     }
     // most floating numbers used in common case are positive, 
     // so use tagged value in the pointer to avoid heap allocation.
-    return (*(var_t*)&val) | build_tag_ptr(NULL, T_PFLOAT);
+    return (*(var_t*)&val) | build_var(NULL, T_PFLOAT);
 }
 
 static inline double get_pos_float(var_t v)
@@ -128,7 +128,7 @@ static inline var_t set_str(const char* val)
         sstr_t* raw = malloc(sizeof(sstr_t));
         strcpy(raw->val, val);
         raw->len = (uint8_t)len;
-        return build_tag_ptr(raw, T_SSTR);
+        return build_var(raw, T_SSTR);
     }
     else
     {
@@ -138,7 +138,7 @@ static inline var_t set_str(const char* val)
         strcpy(raw->val, val);
         raw->refcnt = malloc(sizeof(size_t));
         *(raw->refcnt) = 1;
-        return build_tag_ptr(raw, T_LSTR);
+        return build_var(raw, T_LSTR);
     }
 }
 
@@ -157,9 +157,9 @@ typedef struct {
     void (*print_func)(var_t);
     var_t(*clone_func)(var_t);
     void (*delete_func)(var_t*);
-} tagfunc_t;
+} typefunc_t;
 
-tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST + 1];
+typefunc_t FuncTable[POS_FLOAT_TAG_LEAST + 1];
 
 // print funcs
 void Print(var_t);

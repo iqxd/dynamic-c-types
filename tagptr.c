@@ -1,6 +1,6 @@
 #include "tagptr.h"
 
-tagfunc_t tagfunc_arr[] = {
+typefunc_t FuncTable[] = {
     [T_INT] = {.print_func = print_int , .size_func = size_int , .clone_func = clone_int , .delete_func = delete_int },
     [T_PFLOAT] = {.print_func = print_pos_float , .size_func = size_pos_float , .clone_func = clone_pos_float , .delete_func = delete_pos_float},
     [T_NFLOAT] = {.print_func = print_neg_float , .size_func = size_neg_float , .clone_func = clone_neg_float , .delete_func = delete_neg_float},
@@ -10,22 +10,22 @@ tagfunc_t tagfunc_arr[] = {
 
 void Print(var_t v)
 {
-    tagfunc_arr[get_tag(v)].print_func(v);
+    FuncTable[get_type(v)].print_func(v);
 }
 
 size_t Size(var_t v)
 {
-    return tagfunc_arr[get_tag(v)].size_func(v);
+    return FuncTable[get_type(v)].size_func(v);
 }
 
 var_t Clone(var_t v)
 {
-    return tagfunc_arr[get_tag(v)].clone_func(v);
+    return FuncTable[get_type(v)].clone_func(v);
 }
 
 void Delete(var_t* v_ref)
 {
-    tagfunc_arr[get_tag(*v_ref)].delete_func(v_ref);
+    FuncTable[get_type(*v_ref)].delete_func(v_ref);
 }
 
 // print funcs
@@ -93,12 +93,12 @@ var_t clone_pos_float(var_t v)
 
 var_t clone_neg_float(var_t v)
 {
-    return build_tag_ptr(_clone_heap_obj(v), T_NFLOAT);
+    return build_var(_clone_heap_obj(v), T_NFLOAT);
 }
 
 var_t clone_short_str(var_t v)
 {
-    return build_tag_ptr(_clone_heap_obj(v), T_SSTR);
+    return build_var(_clone_heap_obj(v), T_SSTR);
 }
 
 var_t clone_long_str(var_t v)
@@ -106,18 +106,18 @@ var_t clone_long_str(var_t v)
     lstr_t* lstr = (lstr_t*)_clone_heap_obj(v);
     size_t n = *(lstr->refcnt);
     *(lstr->refcnt) = n + 1;
-    return build_tag_ptr(lstr, T_LSTR);
+    return build_var(lstr, T_LSTR);
 }
 
 // delete funcs
 void delete_int(var_t* v_ref)
 {
-    *v_ref = TAG_NULL;
+    *v_ref = VAR_NULL;
 }
 
 void delete_pos_float(var_t* v_ref)
 {
-    *v_ref = TAG_NULL;
+    *v_ref = VAR_NULL;
 }
 
 void delete_neg_float(var_t* v_ref)
@@ -144,7 +144,7 @@ void delete_long_str(var_t* v_ref)
         *(lstr->refcnt) = n;
     }
     free(lstr);
-    *v_ref = TAG_NULL;
+    *v_ref = VAR_NULL;
 }
 
 
