@@ -2,137 +2,137 @@
 
 tagfunc_t tagfunc_arr[] = {
     [T_INT] = {.print_func = print_int , .size_func = size_int , .clone_func = clone_int , .delete_func = delete_int },
-    [T_POS_FLOAT] = {.print_func = print_pos_float , .size_func = size_pos_float , .clone_func = clone_pos_float , .delete_func = delete_pos_float},
-    [T_NEG_FLOAT] = {.print_func = print_neg_float , .size_func = size_neg_float , .clone_func = clone_neg_float , .delete_func = delete_neg_float},
+    [T_PFLOAT] = {.print_func = print_pos_float , .size_func = size_pos_float , .clone_func = clone_pos_float , .delete_func = delete_pos_float},
+    [T_NFLOAT] = {.print_func = print_neg_float , .size_func = size_neg_float , .clone_func = clone_neg_float , .delete_func = delete_neg_float},
     [T_SSTR] = {.print_func = print_short_str , .size_func = size_short_str , .clone_func = clone_short_str , .delete_func = delete_short_str},
     [T_LSTR] = {.print_func = print_long_str , .size_func = size_long_str , .clone_func = clone_long_str , .delete_func = delete_long_str}
 };
 
-void Print(tagptr_t tp)
+void Print(var_t v)
 {
-    tagfunc_arr[get_tag(tp)].print_func(tp);
+    tagfunc_arr[get_tag(v)].print_func(v);
 }
 
-size_t Size(tagptr_t tp)
+size_t Size(var_t v)
 {
-    return tagfunc_arr[get_tag(tp)].size_func(tp);
+    return tagfunc_arr[get_tag(v)].size_func(v);
 }
 
-tagptr_t Clone(tagptr_t tp)
+var_t Clone(var_t v)
 {
-    return tagfunc_arr[get_tag(tp)].clone_func(tp);
+    return tagfunc_arr[get_tag(v)].clone_func(v);
 }
 
-void Delete(tagptr_t* reftp)
+void Delete(var_t* v_ref)
 {
-    return tagfunc_arr[get_tag(*reftp)].delete_func(reftp);
+    tagfunc_arr[get_tag(*v_ref)].delete_func(v_ref);
 }
 
 // print funcs
-void print_int(tagptr_t tp)
+void print_int(var_t v)
 {
-    printf("%16.16llX => %d\n", tp, get_int(tp));
+    printf("%16.16llX => %d\n", v, get_int(v));
 }
 
-void print_pos_float(tagptr_t tp)
+void print_pos_float(var_t v)
 {
-    printf("%16.16llX => %lf\n", tp, get_pos_float(tp));
+    printf("%16.16llX => %lf\n", v, get_pos_float(v));
 }
 
-void print_neg_float(tagptr_t tp)
+void print_neg_float(var_t v)
 {
-    printf("%16.16llX => %lf\n", tp, get_neg_float(tp));
+    printf("%16.16llX => %lf\n", v, get_neg_float(v));
 }
 
-void print_short_str(tagptr_t tp)
+void print_short_str(var_t v)
 {
-    printf("%16.16llX => \"%s\"\n", tp, get_short_str(tp));
+    printf("%16.16llX => \"%s\"\n", v, get_short_str(v));
 }
 
-void print_long_str(tagptr_t tp)
+void print_long_str(var_t v)
 {
-    printf("%16.16llX => \"%s\"\n", tp, get_long_str(tp));
+    printf("%16.16llX => \"%s\"\n", v, get_long_str(v));
 }
 
 // size funcs
-size_t size_int(tagptr_t tp)
+size_t size_int(var_t v)
 {
-    return sizeof(tp);
+    return sizeof(v);
 }
 
-size_t size_pos_float(tagptr_t tp)
+size_t size_pos_float(var_t v)
 {
-    return sizeof(tp);
+    return sizeof(v);
 }
 
-size_t size_neg_float(tagptr_t tp)
+size_t size_neg_float(var_t v)
 {
-    return sizeof(tp) + sizeof(tnfloat_t);
+    return sizeof(v) + sizeof(nfloat_t);
 }
 
-size_t size_short_str(tagptr_t tp)
+size_t size_short_str(var_t v)
 {
-    return sizeof(tp) + sizeof(tsstr_t);
+    return sizeof(v) + sizeof(sstr_t);
 }
 
-size_t size_long_str(tagptr_t tp)
+size_t size_long_str(var_t v)
 {
-    return sizeof(tp) + sizeof(tlstr_t) + ((tlstr_t*)get_ref(tp))->len + 1;
+    return sizeof(v) + sizeof(lstr_t) + ((lstr_t*)get_ref(v))->len + 1;
 }
 
 // clone funcs
-tagptr_t clone_int(tagptr_t tp)
+var_t clone_int(var_t v)
 {
-    return tp;
+    return v;
 }
 
-tagptr_t clone_pos_float(tagptr_t tp)
+var_t clone_pos_float(var_t v)
 {
-    return tp;
+    return v;
 }
 
-tagptr_t clone_neg_float(tagptr_t tp)
+var_t clone_neg_float(var_t v)
 {
-    return build_tag_ptr(_clone_heap_obj(tp), T_NEG_FLOAT);
+    return build_tag_ptr(_clone_heap_obj(v), T_NFLOAT);
 }
 
-tagptr_t clone_short_str(tagptr_t tp)
+var_t clone_short_str(var_t v)
 {
-    return build_tag_ptr(_clone_heap_obj(tp), T_SSTR);
+    return build_tag_ptr(_clone_heap_obj(v), T_SSTR);
 }
 
-tagptr_t clone_long_str(tagptr_t tp)
+var_t clone_long_str(var_t v)
 {
-    tlstr_t* lstr = (tlstr_t*)_clone_heap_obj(tp);
+    lstr_t* lstr = (lstr_t*)_clone_heap_obj(v);
     size_t n = *(lstr->refcnt);
     *(lstr->refcnt) = n + 1;
     return build_tag_ptr(lstr, T_LSTR);
 }
 
 // delete funcs
-void delete_int(tagptr_t* tp)
+void delete_int(var_t* v_ref)
 {
-    *tp = TAG_NULL;
+    *v_ref = TAG_NULL;
 }
 
-void delete_pos_float(tagptr_t* tp)
+void delete_pos_float(var_t* v_ref)
 {
-    *tp = TAG_NULL;
+    *v_ref = TAG_NULL;
 }
 
-void delete_neg_float(tagptr_t* tp)
+void delete_neg_float(var_t* v_ref)
 {
-    _delete_heap_obj(tp);
+    _delete_heap_obj(v_ref);
 }
 
-void delete_short_str(tagptr_t* tp)
+void delete_short_str(var_t* v_ref)
 {
-    _delete_heap_obj(tp);
+    _delete_heap_obj(v_ref);
 }
 
-void delete_long_str(tagptr_t* tp)
+void delete_long_str(var_t* v_ref)
 {
-    tlstr_t* lstr = (tlstr_t*)get_ref(*tp);
+    lstr_t* lstr = (lstr_t*)get_ref(*v_ref);
     size_t n = *(lstr->refcnt);
     if (--n == 0)
     {
@@ -144,7 +144,7 @@ void delete_long_str(tagptr_t* tp)
         *(lstr->refcnt) = n;
     }
     free(lstr);
-    *tp = TAG_NULL;
+    *v_ref = TAG_NULL;
 }
 
 
