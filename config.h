@@ -10,3 +10,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+
+#define HEAP_OBJECT_BYTES 24
+#define ALLOCATOR_RESERVED_OBJECTS 100
+#define ALLOCATOR_INCREMENT_OBJECTS 50

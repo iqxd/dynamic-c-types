@@ -3,7 +3,6 @@
 
 typedef uint64_t var_t;
 
-#define HEAP_OBJECT_BYTES 24
 #define SHORT_STR_ALLOC_BYTES (HEAP_OBJECT_BYTES-1)
 #define LIST_RESERVED_ELEMS 10
 #define LIST_INCR_FACTOR 1.8
