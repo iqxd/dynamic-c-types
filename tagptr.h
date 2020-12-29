@@ -168,12 +168,13 @@ typedef struct {
     size_t(*size_func)(tagptr_t);
     void (*print_func)(tagptr_t);
     tagptr_t(*clone_func)(tagptr_t);
-    void (*delete_func)(tagptr_t);
+    void (*delete_func)(tagptr_t*);
 } tagfunc_t;
 
 tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST + 1];
 
 // print funcs
+void Print(tagptr_t);
 void print_int(tagptr_t);
 void print_pos_float(tagptr_t);
 void print_neg_float(tagptr_t);
@@ -181,6 +182,7 @@ void print_short_str(tagptr_t);
 void print_long_str(tagptr_t);
 
 // size funcs
+size_t Size(tagptr_t);
 size_t size_int(tagptr_t);
 size_t size_pos_float(tagptr_t);
 size_t size_neg_float(tagptr_t);
@@ -188,6 +190,7 @@ size_t size_short_str(tagptr_t);
 size_t size_long_str(tagptr_t);
 
 // clone funcs
+tagptr_t Clone(tagptr_t);
 tagptr_t clone_int(tagptr_t);
 tagptr_t clone_pos_float(tagptr_t);
 tagptr_t clone_neg_float(tagptr_t);
@@ -195,6 +198,7 @@ tagptr_t clone_short_str(tagptr_t);
 tagptr_t clone_long_str(tagptr_t);
 
 // delete funcs
+void Delete(tagptr_t*);
 void delete_int(tagptr_t*);
 void delete_pos_float(tagptr_t*);
 void delete_neg_float(tagptr_t*);
