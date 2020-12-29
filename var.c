@@ -1,4 +1,4 @@
-#include "tagptr.h"
+#include "var.h"
 
 typefunc_t FuncTable[] = {
     [T_INT] = {.print_func = print_int , .size_func = size_int , .clone_func = clone_int , .delete_func = delete_int },
