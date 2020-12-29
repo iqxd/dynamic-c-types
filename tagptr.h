@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #ifdef _MSC_VER
-    #define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #define HEAP_OBJECT_BYTES 24
@@ -18,17 +18,18 @@
 #define DICT_RESERVED_NODES 16
 
 typedef uint64_t tagptr_t;
-#define TAG_NULL ((tagptr_t)0)
+
 #define TAG_ALLOC_BITS 6
 #define TAG_SHIFT_BITS (64-TAG_ALLOC_BITS)
-#define POS_FLOAT_SHIFT_BITS 1
+#define POS_FLOAT_ALLOC_BITS 63
+#define POS_FLOAT_SHIFT_BITS (64-POS_FLOAT_ALLOC_BITS)
 #define POS_FLOAT_TAG_LEAST (1<<(TAG_ALLOC_BITS-1))
 #define INT_BITS_MASK       0x00000000FFFFFFFF
 #define REF_BITS_MASK       0x0000FFFFFFFFFFFF
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef enum {
-    T_INT = 0 ,
+    T_INT = 0,
     T_NONE,
     T_NEG_FLOAT,
     T_LSTR,
@@ -38,6 +39,8 @@ typedef enum {
     T_POS_FLOAT = POS_FLOAT_TAG_LEAST
 } tag_t;
 
+#define TAG_NULL (((tagptr_t)T_NONE) << TAG_SHIFT_BITS)
+
 typedef struct {
     double val;
     void* unused[2];
@@ -45,7 +48,7 @@ typedef struct {
 
 typedef struct {
     char val[SHORT_STR_ALLOC_BYTES];
-    char len;
+    uint8_t len;
 } tsstr_t;
 
 typedef struct {
@@ -60,7 +63,6 @@ typedef struct {
     size_t alloc;
 } tlist_t;
 
-
 static_assert(sizeof(tnfloat_t) <= HEAP_OBJECT_BYTES, "");
 static_assert(sizeof(tsstr_t) <= HEAP_OBJECT_BYTES, "");
 static_assert(sizeof(tlstr_t) <= HEAP_OBJECT_BYTES, "");
@@ -73,12 +75,12 @@ static inline tagptr_t build_tag_ptr(void* raw, tag_t tag)
 
 static inline tag_t get_tag(tagptr_t tp)
 {
-    return (tag_t)(tp >> TAG_SHIFT_BITS);
+    return (tp >> POS_FLOAT_ALLOC_BITS) ? POS_FLOAT_TAG_LEAST : (tp >> TAG_SHIFT_BITS);
 }
 
 static inline void* get_ref(tagptr_t tp)
 {
-    return (void*)(tp & REF_BITS_MASK );
+    return (void*)(tp & REF_BITS_MASK);
 }
 
 static inline void* _new_heap_obj()
@@ -117,21 +119,12 @@ static inline tagptr_t set_float(double val)
     }
     // most floating numbers used in common case are positive, 
     // so use tagged value in the pointer to avoid heap allocation.
-    return (*(tagptr_t*)&val) | build_tag_ptr(NULL, T_POS_FLOAT);  
-}
-
-static inline double get_float(tagptr_t tp)
-{
-    tag_t tag = get_tag(tp);
-    if (tag >= T_POS_FLOAT)
-        return *(double*)(&(tagptr_t){ tp & POS_FLOAT_BITS_MASK });
-    else if (tag == T_NEG_FLOAT)
-        return *(double*)get_ref(tp);
+    return (*(tagptr_t*)&val) | build_tag_ptr(NULL, T_POS_FLOAT);
 }
 
 static inline double get_pos_float(tagptr_t tp)
 {
-    return *(double*)(&(tagptr_t){ tp & POS_FLOAT_BITS_MASK });
+    return *(double*)(&(tagptr_t) { tp& POS_FLOAT_BITS_MASK });
 }
 
 static inline double get_neg_float(tagptr_t tp)
@@ -142,14 +135,14 @@ static inline double get_neg_float(tagptr_t tp)
 static inline tagptr_t set_str(const char* val)
 {
     size_t len = strlen(val);
-    if ( len < SHORT_STR_ALLOC_BYTES )
+    if (len < SHORT_STR_ALLOC_BYTES)
     {
         tsstr_t* raw = malloc(sizeof(tsstr_t));
         strcpy(raw->val, val);
-        raw->len = len;
+        raw->len = (uint8_t)len;
         return build_tag_ptr(raw, T_SSTR);
-    } 
-    else 
+    }
+    else
     {
         tlstr_t* raw = malloc(sizeof(tlstr_t));
         raw->len = len;
@@ -158,17 +151,7 @@ static inline tagptr_t set_str(const char* val)
         raw->refcnt = malloc(sizeof(size_t));
         *(raw->refcnt) = 1;
         return build_tag_ptr(raw, T_LSTR);
-    } 
-}
-
-static inline char* get_str(tagptr_t tp)
-{
-    tag_t tag = get_tag(tp);
-    void* ref = get_ref(tp);
-    if (tag == T_SSTR)
-        return ((tsstr_t*)ref)->val;
-    else if (tag == T_LSTR)
-        return ((tlstr_t*)ref)->val;
+    }
 }
 
 static inline char* get_short_str(tagptr_t tp)
@@ -184,11 +167,11 @@ static inline char* get_long_str(tagptr_t tp)
 typedef struct {
     size_t(*size_func)(tagptr_t);
     void (*print_func)(tagptr_t);
-    tagptr_t (*clone_func)(tagptr_t);
+    tagptr_t(*clone_func)(tagptr_t);
     void (*delete_func)(tagptr_t);
 } tagfunc_t;
 
-tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST+1];
+tagfunc_t tagfunc_arr[POS_FLOAT_TAG_LEAST + 1];
 
 // print funcs
 void print_int(tagptr_t);
