@@ -27,6 +27,8 @@ int main()
     Delete(&s3);
     Delete(&s4);
     Delete(&s2);
+    var_t null0 = set_null(NULL);
+    Print(null0);
 #ifdef LEAK_DEBUG
     _CrtDumpMemoryLeaks();
 #endif

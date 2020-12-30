@@ -1,107 +1,128 @@
 #include "var.h"
 
-typefunc_t FuncTable[] = {
-    [T_INT] = {.print_func = print_int , .size_func = size_int , .clone_func = clone_int , .delete_func = delete_int },
-    [T_PFLOAT] = {.print_func = print_pos_float , .size_func = size_pos_float , .clone_func = clone_pos_float , .delete_func = delete_pos_float},
-    [T_NFLOAT] = {.print_func = print_neg_float , .size_func = size_neg_float , .clone_func = clone_neg_float , .delete_func = delete_neg_float},
-    [T_SSTR] = {.print_func = print_short_str , .size_func = size_short_str , .clone_func = clone_short_str , .delete_func = delete_short_str},
+// print funcs
+static void print_int(var_t);
+static void print_null(var_t);
+static void print_pos_float(var_t);
+static void print_neg_float(var_t);
+static void print_short_str(var_t);
+static void print_long_str(var_t);
+
+// size funcs
+static size_t size_tag_var(var_t);
+static size_t size_heap_var(var_t);
+static size_t size_long_str(var_t);
+
+// clone funcs
+static var_t clone_tag_var(var_t);
+static var_t clone_heap_var(var_t);
+static var_t clone_long_str(var_t);
+
+// delete funcs
+static void delete_tag_var(var_t*);
+static void delete_heap_var(var_t*);
+static void delete_long_str(var_t*);
+
+typedef struct {
+    size_t(*size_func)(var_t);
+    void (*print_func)(var_t);
+    var_t(*clone_func)(var_t);
+    void (*delete_func)(var_t*);
+} typefunc_t;
+
+static typefunc_t FuncTable[POS_FLOAT_TAG_LEAST + 1] = {
+    [T_INT] = {.print_func = print_int , .size_func = size_tag_var , .clone_func = clone_tag_var , .delete_func = delete_tag_var },
+    [T_NULL] = {.print_func = print_null , .size_func = size_tag_var , .clone_func = clone_tag_var  },
+    [T_PFLOAT] = {.print_func = print_pos_float , .size_func = size_tag_var , .clone_func = clone_tag_var , .delete_func = delete_tag_var},
+    [T_NFLOAT] = {.print_func = print_neg_float , .size_func = size_heap_var , .clone_func = clone_heap_var , .delete_func = delete_heap_var},
+    [T_SSTR] = {.print_func = print_short_str , .size_func = size_heap_var , .clone_func = clone_heap_var , .delete_func = delete_heap_var},
     [T_LSTR] = {.print_func = print_long_str , .size_func = size_long_str , .clone_func = clone_long_str , .delete_func = delete_long_str}
 };
 
 void Print(var_t v)
 {
-    FuncTable[get_type(v)].print_func(v);
+    void(*f)(var_t) = FuncTable[get_type(v)].print_func;
+    if(f) f(v);
 }
 
 size_t Size(var_t v)
 {
-    return FuncTable[get_type(v)].size_func(v);
+    size_t(*f)(var_t) = FuncTable[get_type(v)].size_func;
+    return f ? f(v) : 0;
 }
 
 var_t Clone(var_t v)
 {
-    return FuncTable[get_type(v)].clone_func(v);
+    var_t(*f)(var_t) = FuncTable[get_type(v)].clone_func;
+    return f ? f(v) : VAR_NULL;
 }
 
 void Delete(var_t* v_ref)
 {
-    FuncTable[get_type(*v_ref)].delete_func(v_ref);
+    void(*f)(var_t*) = FuncTable[get_type(*v_ref)].delete_func;
+    if (f) f(v_ref);
 }
 
 // print funcs
-void print_int(var_t v)
+static void print_int(var_t v)
 {
     printf("%16.16llX => %d\n", v, get_int(v));
 }
 
-void print_pos_float(var_t v)
+static void print_null(var_t v)
+{
+    printf("%16.16llX => %s\n", v, "NULL");
+}
+
+static void print_pos_float(var_t v)
 {
     printf("%16.16llX => %lf\n", v, get_pos_float(v));
 }
 
-void print_neg_float(var_t v)
+static void print_neg_float(var_t v)
 {
     printf("%16.16llX => %lf\n", v, get_neg_float(v));
 }
 
-void print_short_str(var_t v)
+static void print_short_str(var_t v)
 {
     printf("%16.16llX => \"%s\"\n", v, get_short_str(v));
 }
 
-void print_long_str(var_t v)
+static void print_long_str(var_t v)
 {
     printf("%16.16llX => \"%s\"\n", v, get_long_str(v));
 }
 
 // size funcs
-size_t size_int(var_t v)
+static size_t size_tag_var(var_t v)
 {
     return sizeof(v);
 }
 
-size_t size_pos_float(var_t v)
+static size_t size_heap_var(var_t v)
 {
-    return sizeof(v);
+    return sizeof(v) + HEAP_OBJECT_BYTES;
 }
 
-size_t size_neg_float(var_t v)
+static size_t size_long_str(var_t v)
 {
-    return sizeof(v) + sizeof(nfloat_t);
-}
-
-size_t size_short_str(var_t v)
-{
-    return sizeof(v) + sizeof(sstr_t);
-}
-
-size_t size_long_str(var_t v)
-{
-    return sizeof(v) + sizeof(lstr_t) + ((lstr_t*)get_ref(v))->len + 1;
+    lstr_t* lstr = get_ref(v);
+    return size_heap_var(v) + (lstr->len + 1) + sizeof(*(lstr->refcnt));
 }
 
 // clone funcs
-var_t clone_int(var_t v)
+static var_t clone_tag_var(var_t v)
 {
     return v;
 }
 
-var_t clone_pos_float(var_t v)
+static var_t clone_heap_var(var_t v)
 {
-    return v;
+    return build_var(_clone_heap_obj(v) , get_type(v));
 }
 
-var_t clone_neg_float(var_t v)
-{
-    return build_var(_clone_heap_obj(v), T_NFLOAT);
-}
-
-var_t clone_short_str(var_t v)
-{
-    return build_var(_clone_heap_obj(v), T_SSTR);
-}
-
-var_t clone_long_str(var_t v)
+static var_t clone_long_str(var_t v)
 {
     lstr_t* lstr = (lstr_t*)_clone_heap_obj(v);
     size_t n = *(lstr->refcnt);
@@ -110,27 +131,18 @@ var_t clone_long_str(var_t v)
 }
 
 // delete funcs
-void delete_int(var_t* v_ref)
+static void delete_tag_var(var_t* v_ref)
 {
     *v_ref = VAR_NULL;
 }
 
-void delete_pos_float(var_t* v_ref)
+static void delete_heap_var(var_t* v_ref)
 {
+    free(get_ref(*v_ref));
     *v_ref = VAR_NULL;
 }
 
-void delete_neg_float(var_t* v_ref)
-{
-    _delete_heap_obj(v_ref);
-}
-
-void delete_short_str(var_t* v_ref)
-{
-    _delete_heap_obj(v_ref);
-}
-
-void delete_long_str(var_t* v_ref)
+static void delete_long_str(var_t* v_ref)
 {
     lstr_t* lstr = (lstr_t*)get_ref(*v_ref);
     size_t n = *(lstr->refcnt);

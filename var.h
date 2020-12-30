@@ -72,18 +72,12 @@ static inline void* get_ref(var_t v)
 
 static inline void* _new_heap_obj()
 {
-    return malloc(HEAP_OBJECT_BYTES);
+    return checked_malloc(HEAP_OBJECT_BYTES);
 }
 
 static inline void* _clone_heap_obj(var_t v)
 {
     return memcpy(_new_heap_obj(), get_ref(v), HEAP_OBJECT_BYTES);
-}
-
-static inline void _delete_heap_obj(var_t* v_ref)
-{
-    free(get_ref(*v_ref));
-    *v_ref = VAR_NULL;
 }
 
 static inline var_t set_int(int32_t val)
@@ -94,6 +88,11 @@ static inline var_t set_int(int32_t val)
 static inline int32_t get_int(var_t v)
 {
     return (int32_t)(v & INT_BITS_MASK);
+}
+
+static inline var_t set_null(void* val)
+{
+    return VAR_NULL;
 }
 
 static inline var_t set_float(double val)
@@ -151,43 +150,7 @@ static inline char* get_long_str(var_t v)
     return ((lstr_t*)get_ref(v))->val;
 }
 
-typedef struct {
-    size_t(*size_func)(var_t);
-    void (*print_func)(var_t);
-    var_t(*clone_func)(var_t);
-    void (*delete_func)(var_t*);
-} typefunc_t;
-
-typefunc_t FuncTable[POS_FLOAT_TAG_LEAST + 1];
-
-// print funcs
 void Print(var_t);
-void print_int(var_t);
-void print_pos_float(var_t);
-void print_neg_float(var_t);
-void print_short_str(var_t);
-void print_long_str(var_t);
-
-// size funcs
 size_t Size(var_t);
-size_t size_int(var_t);
-size_t size_pos_float(var_t);
-size_t size_neg_float(var_t);
-size_t size_short_str(var_t);
-size_t size_long_str(var_t);
-
-// clone funcs
 var_t Clone(var_t);
-var_t clone_int(var_t);
-var_t clone_pos_float(var_t);
-var_t clone_neg_float(var_t);
-var_t clone_short_str(var_t);
-var_t clone_long_str(var_t);
-
-// delete funcs
 void Delete(var_t*);
-void delete_int(var_t*);
-void delete_pos_float(var_t*);
-void delete_neg_float(var_t*);
-void delete_short_str(var_t*);
-void delete_long_str(var_t*);
