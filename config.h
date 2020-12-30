@@ -24,3 +24,11 @@
 #define HEAP_OBJECT_BYTES 24
 #define ALLOCATOR_RESERVED_OBJECTS 100
 #define ALLOCATOR_INCREMENT_OBJECTS 50
+
+static inline void* checked_malloc(size_t sz)
+{
+    void *raw = malloc(sz);
+    if (raw) return raw;
+    perror("malloc error");
+    exit(EXIT_FAILURE);
+}

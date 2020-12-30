@@ -100,7 +100,7 @@ static inline var_t set_float(double val)
 {
     if (val < 0)
     {
-        nfloat_t* raw = malloc(sizeof(nfloat_t));
+        nfloat_t* raw = checked_malloc(sizeof(nfloat_t));
         raw->val = val;
         return build_var(raw, T_NFLOAT);
     }
@@ -124,18 +124,18 @@ static inline var_t set_str(const char* val)
     size_t len = strlen(val);
     if (len < SHORT_STR_ALLOC_BYTES)
     {
-        sstr_t* raw = malloc(sizeof(sstr_t));
+        sstr_t* raw = checked_malloc(sizeof(sstr_t));
         strcpy(raw->val, val);
         raw->len = (uint8_t)len;
         return build_var(raw, T_SSTR);
     }
     else
     {
-        lstr_t* raw = malloc(sizeof(lstr_t));
+        lstr_t* raw = checked_malloc(sizeof(lstr_t));
         raw->len = len;
-        raw->val = malloc((len + 1) * sizeof(char));
+        raw->val = checked_malloc((len + 1) * sizeof(char));
         strcpy(raw->val, val);
-        raw->refcnt = malloc(sizeof(size_t));
+        raw->refcnt = checked_malloc(sizeof(size_t));
         *(raw->refcnt) = 1;
         return build_var(raw, T_LSTR);
     }
