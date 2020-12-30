@@ -18,11 +18,16 @@ int main()
     var_t i2 = Clone(i1);
     Delete(&i1);
     var_t f4 = Clone(f1);
+    Delete(&f1);
     Delete(&f4);
+    Delete(&s1);
     var_t s3 = Clone(s2);
     var_t s4 = Clone(s3);
     Print(s4);
     Delete(&s3);
     Delete(&s4);
     Delete(&s2);
+#ifdef LEAK_DEBUG
+    _CrtDumpMemoryLeaks();
+#endif
 }

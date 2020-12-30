@@ -4,8 +4,18 @@
     #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <stdio.h>
+#if defined(_MSC_VER) && defined(_DEBUG)
+    #define LEAK_DEBUG
+    #define _CRTDBG_MAP_ALLOC
+#endif
+
 #include <stdlib.h>
+
+#ifdef LEAK_DEBUG
+    #include <crtdbg.h>
+#endif
+
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
