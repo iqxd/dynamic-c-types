@@ -3,12 +3,12 @@ int main()
 {
     printf("hello micclib!\n");
 
-    var_t i1 = New(-3);
-    var_t f1 = New(-11.52);
-    var_t f2 = New(567.113456789);
-    var_t f3 = New(-0.0);
-    var_t s1 = New("12345678");
-    var_t s2 = New("I am going to take some good snacks");
+    var_t i1 = NewValue(-3);
+    var_t f1 = NewValue(-11.52);
+    var_t f2 = NewValue(567.113456789);
+    var_t f3 = NewValue(-0.0);
+    var_t s1 = NewValue("12345678");
+    var_t s2 = NewValue("I am going to take some good snacks");
     
     Print(i1); Print(f1); Print(f2); Print(f3); Print(s1); Print(s2);
 
