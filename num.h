@@ -1,29 +1,60 @@
 #pragma once
 #include "var.h"
 
-type_t IntType, FloatType;
+#define INT_BITS_MASK       0x00000000FFFFFFFF
+#define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
-#define _to_int_t(x) ((num_t){&IntType, .ival = (int_t)(x)})
-#define _to_double(x) ((num_t){&FloatType, .fval = (double)(x)})
+typedef struct {
+    double val;
+} nfloat_t;
 
-// unsigned long long may overflow
-#define new_num(x) _Generic((x),  \
-    _Bool : _to_int_t(x) ,\
-    char : _to_int_t(x) , \
-    short   : _to_int_t(x)  , \
-    int   : _to_int_t(x)  , \
-    long   : _to_int_t(x)  , \
-    long long   : _to_int_t(x)  , \
-    unsigned char : _to_int_t(x) , \
-    unsigned short   : _to_int_t(x)  , \
-    unsigned int   : _to_int_t(x)  , \
-    unsigned long   : _to_int_t(x)  , \
-    unsigned long long   : _to_int_t(x)   , \
-    float : _to_double(x), \
-    double : _to_double(x), \
-    long double : _to_double(x) \
-)
+static_assert(sizeof(nfloat_t) <= HEAP_OBJECT_BYTES, "");
 
-var_t* clone_num(num_t);
-void print_num(num_t);
+static inline var_t set_int(int32_t val)
+{
+    return build_var(NULL, T_INT) | (uint32_t)val;
+}
 
+static inline int32_t get_int(var_t v)
+{
+    return (int32_t)(v & INT_BITS_MASK);
+}
+
+static inline var_t set_float(double val)
+{
+    if (val < 0)
+    {
+        nfloat_t* raw = checked_malloc(sizeof(nfloat_t));
+        raw->val = val;
+        return build_var(raw, T_NFLOAT);
+    }
+    // most floating numbers used in common case are positive, 
+    // so use tagged value in the pointer to avoid heap allocation.
+    return (*(var_t*)&val) | build_var(NULL, T_PFLOAT);
+}
+
+static inline double get_pos_float(var_t v)
+{
+    return *(double*)(&(var_t) { v & POS_FLOAT_BITS_MASK });
+}
+
+static inline double get_neg_float(var_t v)
+{
+    return *(double*)get_ref(v);
+}
+
+
+static inline void print_int(var_t v)
+{
+    printf("%16.16llX => %d\n", v, get_int(v));
+}
+
+static inline void print_pos_float(var_t v)
+{
+    printf("%16.16llX => %lf\n", v, get_pos_float(v));
+}
+
+static inline void print_neg_float(var_t v)
+{
+    printf("%16.16llX => %lf\n", v, get_neg_float(v));
+}
