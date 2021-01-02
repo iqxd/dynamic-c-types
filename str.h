@@ -57,7 +57,7 @@ static inline size_t size_long_str(var_t v)
 
 static inline var_t clone_long_str(var_t v)
 {
-    lstr_t* lstr = (lstr_t*)_clone_heap_obj(v);
+    lstr_t* lstr = _clone_heap_obj(v);
     size_t n = *(lstr->refcnt);
     *(lstr->refcnt) = n + 1;
     return build_var(lstr, T_LSTR);
@@ -65,7 +65,7 @@ static inline var_t clone_long_str(var_t v)
 
 static inline void delete_long_str(var_t* v_ref)
 {
-    lstr_t* lstr = (lstr_t*)get_ref(*v_ref);
+    lstr_t* lstr = get_ref(*v_ref);
     size_t n = *(lstr->refcnt);
     if (--n == 0)
     {
