@@ -13,7 +13,8 @@ static typefunc_t FuncTable[POS_FLOAT_TAG_LEAST + 1] = {
     [T_PFLOAT] = {.print_func = print_pos_float , .size_func = size_tag_var , .clone_func = clone_tag_var , .delete_func = delete_tag_var},
     [T_NFLOAT] = {.print_func = print_neg_float , .size_func = size_heap_var , .clone_func = clone_heap_var , .delete_func = delete_heap_var},
     [T_SSTR] = {.print_func = print_short_str , .size_func = size_heap_var , .clone_func = clone_heap_var , .delete_func = delete_heap_var},
-    [T_LSTR] = {.print_func = print_long_str , .size_func = size_long_str , .clone_func = clone_long_str , .delete_func = delete_long_str}
+    [T_LSTR] = {.print_func = print_long_str , .size_func = size_long_str , .clone_func = clone_long_str , .delete_func = delete_long_str},
+    [T_LIST] = {.print_func = print_list , .size_func = size_list , .clone_func = clone_list , .delete_func = delete_list}
 };
 
 void Print(var_t v)
@@ -39,9 +40,3 @@ void Delete(var_t* v_ref)
     void(*f)(var_t*) = FuncTable[get_type(*v_ref)].delete_func;
     if (f) f(v_ref);
 }
-
-
-
-
-
-

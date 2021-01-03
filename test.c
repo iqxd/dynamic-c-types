@@ -29,6 +29,34 @@ int main()
     Delete(&s2);
     var_t null0 = VAR_NULL;
     Print(null0);
+    
+    var_t i4 = NewValue(-78);
+    var_t i5 = NewValue(0.2);
+    var_t s5 = NewValue("ssst");
+    var_t s6 = NewValue("seeing is believing, let me investigate");
+    var_t l1 = set_empty_list();
+    var_t l2 = set_list((var_t[]) { i4, i5, s5, s6 }, 4);
+    Print(l1); Print(l2);
+    var_t l3 = clone_list(l2);
+    Print(l3);
+    printf("size s6 = %zu , size l3 = %zu\n", Size(s6), Size(l3));
+    list_remove(l2, 2);
+    Print(l2);
+    if (!list_empty(l2))
+        list_clear(l2);
+    Print(l2);
+    var_t v1 = list_get(l3, 1);
+    var_t v2 = list_pop(l3);
+    list_add(l1, VAR_NULL);
+    Print(v1); Print(v2);Print(l1);
+    Delete(&v2);
+    Delete(&l1);
+    Delete(&l2);
+    Delete(&l3);
+    Delete(&s5);
+    Delete(&s6);
+    
+    
 #ifdef LEAK_DEBUG
     _CrtDumpMemoryLeaks();
 #endif

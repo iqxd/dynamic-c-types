@@ -1,6 +1,7 @@
 #pragma once
 #include "num.h"
 #include "str.h"
+#include "list.h"
 
 #define NewValue(X) _Generic((X), \
     int:set_int, \

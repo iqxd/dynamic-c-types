@@ -32,3 +32,16 @@ static inline void* checked_malloc(size_t sz)
     perror("malloc error");
     exit(EXIT_FAILURE);
 }
+
+static inline void* checked_realloc(void *mem ,size_t sz)
+{
+    void *raw = realloc(mem,sz);
+    if (raw) return raw;
+    perror("realloc error");
+    exit(EXIT_FAILURE);
+}
+
+static inline void runtime_error()
+{
+    exit(EXIT_FAILURE);
+}
