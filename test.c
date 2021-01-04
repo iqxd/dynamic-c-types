@@ -49,20 +49,27 @@ int main()
     loc_var_t s7 = NewValue("my name is Jerry , i am 20 years old");
     
 #ifdef _MSC_VER
-    Delete(&i1);  
+    Delete(&i1);
+    Delete(&i2);
+    Delete(&i4);
+    Delete(&i5);
     Delete(&f1);
+    Delete(&f2);
+    Delete(&f3);
     Delete(&f4);
     Delete(&s1);
+    Delete(&s2);
     Delete(&s3);
     Delete(&s4);
-    Delete(&s2);
-    Delete(&l4);
-    Delete(&v2);
+    Delete(&s5);
+    Delete(&s6);
+    Delete(&s7);
     Delete(&l1);
     Delete(&l2);
     Delete(&l3);
-    Delete(&s5);
-    Delete(&s6);
+    Delete(&l4);
+    Delete(&v1);
+    Delete(&v2);
 #endif
     
     
