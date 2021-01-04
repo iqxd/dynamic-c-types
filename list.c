@@ -3,14 +3,20 @@
 
 void print_list(var_t v)
 {
+    static nest_level = 0;
+    nest_level++;
     list_t* list = get_ref(v);
     printf("%16.16llX => [\n",v);
     for (size_t i = 0; i < list->len; i++)
     {
-        printf("\t");
+        for (size_t n = 0;n < nest_level;n++)
+            printf("\t");
         Print(list->elems[i]);
     }
+    for (size_t n = 0;n < nest_level;n++)
+        printf("\t");
     printf("]\n");
+    nest_level--;
 }
 
 var_t set_list(var_t v_arr[], size_t len)

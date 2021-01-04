@@ -40,6 +40,10 @@ int main()
     var_t l3 = clone_list(l2);
     Print(l3);
     printf("size s6 = %zu , size l3 = %zu\n", Size(s6), Size(l3));
+    var_t l4 = clone_list(l2);
+    list_update(l4, 1, l2);
+    Print(l4);
+    Print(l4);
     list_remove(l2, 2);
     Print(l2);
     if (!list_empty(l2))
