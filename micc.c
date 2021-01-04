@@ -33,7 +33,7 @@ var_t Clone(var_t v)
 {
     var_t(*f)(var_t) = FuncTable[get_type(v)].clone_func;
     if (f) return f(v);
-    fprintf(stderr, "runtime error: can not clone variable");
+    fprintf(stderr, "runtime error: clone not supported on the variable");
     runtime_error();
 }
 
