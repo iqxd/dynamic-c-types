@@ -43,7 +43,7 @@ int main()
     var_t l4 = clone_list(l2);
     list_update(l4, 1, l2);
     Print(l4);
-    Print(l4);
+    Delete(&l4);
     list_remove(l2, 2);
     Print(l2);
     if (!list_empty(l2))
@@ -60,6 +60,7 @@ int main()
     Delete(&s5);
     Delete(&s6);
     
+    scoped_var_t s7 = NewValue("my name is Jerry , i am 20 years old");
     
 #ifdef LEAK_DEBUG
     _CrtDumpMemoryLeaks();

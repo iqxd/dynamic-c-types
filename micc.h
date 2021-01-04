@@ -3,6 +3,12 @@
 #include "str.h"
 #include "list.h"
 
+#ifdef __GNUC__
+#define scoped_var_t __attribute__((__cleanup__(Delete))) var_t
+#else 
+    #define scoped_var_t 
+#endif
+
 #define NewValue(X) _Generic((X), \
     int:set_int, \
     double:set_float, \
