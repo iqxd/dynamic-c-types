@@ -5,10 +5,12 @@
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef struct {
-    double val;
+    alignas(8) double val;
+    alignas(8) void* unused1;
+    alignas(8) void* unused2;
 } nfloat_t;
 
-static_assert(sizeof(nfloat_t) <= HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(nfloat_t) == HEAP_OBJECT_BYTES, "");
 
 static inline var_t set_int(int32_t val)
 {

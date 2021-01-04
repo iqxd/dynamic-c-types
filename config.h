@@ -8,6 +8,7 @@
     #define LEAK_DEBUG
     #define _CRTDBG_MAP_ALLOC
 #endif
+// leak debug on linux : valgrind --tool=memcheck --leak-check=full -s ./test
 
 #include <stdlib.h>
 
@@ -19,6 +20,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdalign.h>
 #include <assert.h>
 
 #define HEAP_OBJECT_BYTES 24
