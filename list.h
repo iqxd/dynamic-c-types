@@ -5,9 +5,9 @@
 #define LIST_INCR_FACTOR 1.8
 
 typedef struct {
-    alignas(8) size_t len;
-    alignas(8) var_t* elems;
-    alignas(8) size_t alloc;
+    _Alignas(8) size_t len;
+    _Alignas(8) var_t* elems;
+    _Alignas(8) size_t alloc;
 } list_t;
 
 static_assert(sizeof(list_t) == HEAP_OBJECT_BYTES, "");
