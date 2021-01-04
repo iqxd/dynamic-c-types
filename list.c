@@ -3,7 +3,7 @@
 
 void print_list(var_t v)
 {
-    static nest_level = 0;
+    static int nest_level = 0;
     nest_level++;
     list_t* list = get_ref(v);
     printf("%16.16llX => [\n",v);
