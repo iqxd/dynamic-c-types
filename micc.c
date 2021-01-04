@@ -32,7 +32,9 @@ size_t Size(var_t v)
 var_t Clone(var_t v)
 {
     var_t(*f)(var_t) = FuncTable[get_type(v)].clone_func;
-    return f ? f(v) : VAR_NULL;
+    if (f) return f(v);
+    fprintf(stderr, "runtime error: can not clone variable");
+    runtime_error();
 }
 
 void Delete(var_t* v_ref)
