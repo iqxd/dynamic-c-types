@@ -10,8 +10,8 @@ typedef uint64_t var_t;
 #define POS_FLOAT_ALLOC_BITS 63
 
 typedef enum {
-    T_INT = 0,
-    T_NULL,
+    T_NULL = 0,
+    T_INT,
     T_NFLOAT,
     T_LSTR,
     T_SSTR,
