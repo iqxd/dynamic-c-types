@@ -9,9 +9,9 @@ typedef struct {
 } sstr_t;
 
 typedef struct {
-    _Alignas(8) size_t len;
-    _Alignas(8) char* val;
-    _Alignas(8) size_t* refcnt;
+    alignas(8) size_t len;
+    alignas(8) char* val;
+    alignas(8) size_t* refcnt;
 } lstr_t;
 
 static_assert(sizeof(sstr_t) == HEAP_OBJECT_BYTES, "");

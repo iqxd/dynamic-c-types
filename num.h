@@ -5,9 +5,9 @@
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef struct {
-    _Alignas(8) double val;
-    _Alignas(8) void* unused1;
-    _Alignas(8) void* unused2;
+    alignas(8) double val;
+    alignas(8) void* unused1;
+    alignas(8) void* unused2;
 } nfloat_t;
 
 static_assert(sizeof(nfloat_t) == HEAP_OBJECT_BYTES, "");
