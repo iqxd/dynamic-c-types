@@ -5,12 +5,10 @@
 #define POS_FLOAT_BITS_MASK 0x7FFFFFFFFFFFFFFF
 
 typedef struct {
-    alignas(8) double val;
-    alignas(8) void* unused1;
-    alignas(8) void* unused2;
+    double val;
 } nfloat_t;
 
-static_assert(sizeof(nfloat_t) == HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(nfloat_t) <= HEAP_OBJECT_BYTES, "");
 
 static inline var_t set_int(int32_t val)
 {
@@ -26,7 +24,7 @@ static inline var_t set_float(double val)
 {
     if (val < 0)
     {
-        nfloat_t* raw = checked_malloc(sizeof(nfloat_t));
+        nfloat_t* raw = _new_heap_obj();
         raw->val = val;
         return build_var(raw, T_NFLOAT);
     }
@@ -42,7 +40,7 @@ static inline double get_pos_float(var_t v)
 
 static inline double get_neg_float(var_t v)
 {
-    return *(double*)get_ref(v);
+    return ((nfloat_t*)get_ref(v))->val;
 }
 
 

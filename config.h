@@ -21,11 +21,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
-#ifdef _MSC_VER
-    #define alignas _Alignas
-#else
-    #include <stdalign.h>
-#endif
 
 #define HEAP_OBJECT_BYTES 24
 #define ALLOCATOR_RESERVED_OBJECTS 100

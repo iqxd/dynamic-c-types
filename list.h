@@ -5,12 +5,12 @@
 #define LIST_INCR_FACTOR 1.8
 
 typedef struct {
-    alignas(8) size_t len;
-    alignas(8) var_t* elems;
-    alignas(8) size_t alloc;
+    size_t len;
+    var_t* elems;
+    size_t alloc;
 } list_t;
 
-static_assert(sizeof(list_t) == HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(list_t) <= HEAP_OBJECT_BYTES, "");
 
 static inline var_t set_empty_list()
 {

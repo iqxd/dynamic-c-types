@@ -9,13 +9,13 @@ typedef struct {
 } sstr_t;
 
 typedef struct {
-    alignas(8) size_t len;
-    alignas(8) char* val;
-    alignas(8) size_t* refcnt;
+    size_t len;
+    char* val;
+    size_t* refcnt;
 } lstr_t;
 
-static_assert(sizeof(sstr_t) == HEAP_OBJECT_BYTES, "");
-static_assert(sizeof(lstr_t) == HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(sstr_t) <= HEAP_OBJECT_BYTES, "");
+static_assert(sizeof(lstr_t) <= HEAP_OBJECT_BYTES, "");
 
 static inline var_t set_str(const char* val)
 {
