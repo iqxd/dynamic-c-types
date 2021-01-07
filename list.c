@@ -36,27 +36,22 @@ var_t set_list_from_array(size_t len, var_t v_arr[])
 
 var_t set_list_from_args(var_t v_first,...)
 {
-    if (v_first == VAR_END){
-        list_t *raw = create_list(0);
-        return build_var(raw, T_LIST);
-    } 
-    size_t len = 1;
+    size_t len = 0;
     va_list v_rest;
     va_start(v_rest, v_first);
     va_list v_rest_copy;
     va_copy(v_rest_copy, v_rest);
     
-    while (va_arg(v_rest, var_t) != VAR_END) {
+    for (var_t v = v_first; v != VAR_END; v = va_arg(v_rest, var_t))
         len++;
-    }
     va_end(v_rest);
 
     list_t* raw = create_list(len);
-    raw->elems[0] = Clone(v_first);
-    for (size_t i = 1; i < len;i++) {
-        var_t v = va_arg(v_rest_copy, var_t);
-        raw->elems[i] = Clone(v);
-    }
+    
+    size_t i = 0;
+    for (var_t v = v_first ; v!=VAR_END; v=va_arg(v_rest_copy, var_t))
+        raw->elems[i++] = Clone(v);
+    
     va_end(v_rest_copy);
     return build_var(raw, T_LIST);
 }
