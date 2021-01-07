@@ -12,13 +12,14 @@ typedef struct {
 
 static_assert(sizeof(list_t) <= HEAP_OBJECT_BYTES, "");
 
-static inline var_t set_empty_list()
+static inline list_t* create_list(size_t len)
 {
     list_t* raw = _new_heap_obj();
-    raw->len = 0;
-    raw->alloc = LIST_RESERVED_ELEMS;
-    raw->elems = checked_malloc(raw->alloc * sizeof(var_t));
-    return build_var(raw, T_LIST);
+    size_t alloc = LIST_RESERVED_ELEMS + (size_t)(len * LIST_INCR_FACTOR);
+    raw->elems = checked_malloc(alloc * sizeof(var_t));
+    raw->len = len;
+    raw->alloc = alloc;
+    return raw;
 }
 
 static inline void list_index_error(size_t index,size_t length)
@@ -27,7 +28,10 @@ static inline void list_index_error(size_t index,size_t length)
     runtime_error();
 }
 
-var_t set_list(var_t[],size_t);
+var_t set_empty_list();
+var_t set_list_from_array(size_t, var_t[]);
+var_t set_list_from_len_args(size_t, ...);
+
 
 void print_list(var_t);
 size_t size_list(var_t);

@@ -42,3 +42,4 @@ void Delete(var_t* v_ref)
     void(*f)(var_t*) = FuncTable[get_type(*v_ref)].delete_func;
     if (f) f(v_ref);
 }
+

@@ -19,16 +19,31 @@ void print_list(var_t v)
     nest_level--;
 }
 
-var_t set_list(var_t v_arr[], size_t len)
+var_t set_empty_list()
 {
-    list_t* raw = _new_heap_obj();
-    size_t alloc = LIST_RESERVED_ELEMS + (size_t)(len * LIST_INCR_FACTOR);
-    raw->elems = checked_malloc(alloc * sizeof(var_t));
-    raw->len = len;
-    raw->alloc = alloc;
+    list_t *raw = create_list(0);
+    return build_var(raw, T_LIST);
+}
+
+var_t set_list_from_array(size_t len, var_t v_arr[])
+{
+    list_t *raw = create_list(len);
     for (size_t i = 0; i < len; i++) {
         raw->elems[i] = Clone(v_arr[i]);
     }
+    return build_var(raw, T_LIST);
+}
+
+var_t set_list_from_len_args(size_t len, ...)
+{
+    list_t *raw = create_list(len);
+    va_list v_args;
+    va_start(v_args, len);
+    for (size_t i = 0; i < len; i++) {
+        var_t v = va_arg(v_args, var_t);
+        raw->elems[i] = Clone(v);
+    }
+    va_end(v_args);
     return build_var(raw, T_LIST);
 }
 

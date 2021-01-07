@@ -27,7 +27,7 @@ int main()
     loc_var_t s5 = NewValue("ssst");
     loc_var_t s6 = NewValue("seeing is believing, let me investigate");
     loc_var_t l1 = set_empty_list();
-    loc_var_t l2 = set_list((var_t[]) { i4, i5, s5, s6 }, 4);
+    loc_var_t l2 = set_list_from_array(4, (var_t[]) { i4, i5, s5, s6 });
     Print(l1); Print(l2);
     loc_var_t l3 = clone_list(l2);
     Print(l3);
@@ -47,6 +47,11 @@ int main()
     Print(v1); Print(v2);Print(l1);
  
     loc_var_t s7 = NewValue("my name is Jerry , i am 20 years old");
+    
+    loc_var_t m1 = NewValue(11);
+    loc_var_t m2 = NewValue("Hello");
+    loc_var_t l5 = NewListFromLen(2, m1, m2);
+    Print(l5);
     
 #ifdef _MSC_VER
     Delete(&i1);
@@ -70,6 +75,9 @@ int main()
     Delete(&l4);
     Delete(&v1);
     Delete(&v2);
+    Delete(&m1);
+    Delete(&m2);
+    Delete(&l5);
 #endif
     
     

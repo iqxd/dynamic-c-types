@@ -15,6 +15,8 @@
     char*:set_str \
 )(X)
 
+#define NewListFromLen(LEN,...) set_list_from_len_args(LEN, ##__VA_ARGS__)
+
 void Print(var_t);
 size_t Size(var_t);
 var_t Clone(var_t);

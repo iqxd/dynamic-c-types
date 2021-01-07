@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #define HEAP_OBJECT_BYTES 24
