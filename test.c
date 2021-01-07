@@ -52,6 +52,8 @@ int main()
     loc_var_t m2 = NewValue("Hello");
     loc_var_t l5 = NewListFromLen(2, m1, m2);
     Print(l5);
+    loc_var_t l6 = NewList(m1,m2,VAR_END);
+    Print(l6);
     
 #ifdef _MSC_VER
     Delete(&i1);

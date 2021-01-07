@@ -15,6 +15,7 @@
     char*:set_str \
 )(X)
 
+#define NewList(FIRST_VAR,...) set_list_from_args(FIRST_VAR, ##__VA_ARGS__)
 #define NewListFromLen(LEN,...) set_list_from_len_args(LEN, ##__VA_ARGS__)
 
 void Print(var_t);

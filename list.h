@@ -30,6 +30,7 @@ static inline void list_index_error(size_t index,size_t length)
 
 var_t set_empty_list();
 var_t set_list_from_array(size_t, var_t[]);
+var_t set_list_from_args(var_t,...);
 var_t set_list_from_len_args(size_t, ...);
 
 
