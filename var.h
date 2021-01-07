@@ -21,8 +21,8 @@ typedef enum {
     T_PFLOAT = POS_FLOAT_TAG_LEAST
 } type_t;
 
-#define VAR_NULL (((var_t)T_NULL) << TAG_SHIFT_BITS)
-#define VAR_END  (((var_t)T_END) << TAG_SHIFT_BITS)
+var_t VAR_NULL;
+var_t VAR_END;
 
 static inline var_t build_var(void* raw, type_t tp)
 {
