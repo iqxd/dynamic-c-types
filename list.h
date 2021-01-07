@@ -24,7 +24,7 @@ static inline list_t* create_list(size_t len)
 
 static inline void list_index_error(size_t index,size_t length)
 {
-    fprintf(stderr, "runtime error: index [%zu] exceeds list length [%zu]", index, length);
+    fprintf(stderr, "runtime error: index [%zu] exceeds list length [%zu]\n", index, length);
     runtime_error();
 }
 
