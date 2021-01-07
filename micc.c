@@ -43,3 +43,21 @@ void Delete(var_t* v_ref)
     if (f) f(v_ref);
 }
 
+void PrintAll(var_t v_first, ...)
+{
+    va_list v_rest;
+    va_start(v_rest, v_first);
+    for (var_t v = v_first;v!= VAR_END; v= va_arg(v_rest,var_t))
+        Print(v);
+    va_end(v_rest);
+}
+
+void DeleteAll(var_t* v_ref_first, ...)
+{
+    va_list v_ref_rest;
+    va_start(v_ref_rest, v_ref_first);
+    for (var_t* v = v_ref_first; *v != VAR_END; v = va_arg(v_ref_rest, var_t*))
+        Delete(v);
+    va_end(v_ref_rest);
+}
+

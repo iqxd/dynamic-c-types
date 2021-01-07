@@ -44,16 +44,19 @@ int main()
     loc_var_t v1 = list_get(l3, 1);
     loc_var_t v2 = list_pop(l3);
     list_add(l1, VAR_NULL);
-    Print(v1); Print(v2);Print(l1);
+  //  Print(v1); Print(v2);Print(l1);
+    PrintAll(v1, v2, l1,VAR_END);
  
     loc_var_t s7 = NewValue("my name is Jerry , i am 20 years old");
     
-    loc_var_t m1 = NewValue(11);
-    loc_var_t m2 = NewValue("Hello");
+    var_t m1 = NewValue(11);
+    var_t m2 = NewValue("Hello");
     loc_var_t l5 = NewListFromLen(2, m1, m2);
-    Print(l5);
+   
     loc_var_t l6 = NewList(m1,m2,VAR_END);
-    Print(l6);
+    PrintAll(l5,l6,VAR_END);
+    PrintAll(VAR_END);
+    DeleteAll(&m1,&m2, &VAR_END);
     
 #ifdef _MSC_VER
     Delete(&i1);
