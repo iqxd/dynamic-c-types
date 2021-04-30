@@ -1,1 +1,1 @@
-a micro pure c lib by c11 standard , provide helpful data structures , containers and algorithms.
+implement easy used dynamic c data types
